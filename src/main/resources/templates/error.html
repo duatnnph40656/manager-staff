@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-content">
+            <h1>Đã xảy ra lỗi</h1>
+            <div class="error-details">
+                <div th:if="${statusCode}" class="error-status">
+                    <h2>
+                        <span th:text="${statusCode}">500</span>
+                        <span th:text="${statusText}">Internal Server Error</span>
+                    </h2>
+                </div>
+                <p class="error-message" th:text="${message}">Error message</p>
+                <p class="error-path" th:if="${path}">
+                    Path: <span th:text="${path}">/path</span>
+                </p>
+                <p class="error-timestamp" th:if="${timestamp}">
+                    Time: <span th:text="${#dates.format(new java.util.Date(timestamp), 'dd-MM-yyyy HH:mm:ss')}">01-01-2024 00:00:00</span>
+                </p>
+            </div>
+            
+            <!-- Debug information (only shown if exists) -->
+            <div th:if="${exception}" class="error-debug">
+                <details>
+                    <summary>Debug Information</summary>
+                    <div class="debug-content">
+                        <p class="exception" th:text="${exception}">Exception details</p>
+                        <div th:if="${trace}" class="stack-trace">
+                            <pre th:each="line : ${trace}" th:text="${line}">Stack trace line</pre>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <div class="error-actions">
+                <a href="/" class="btn btn-primary">Về trang chủ</a>
+                <a href="javascript:history.back()" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .error-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .error-content {
+            text-align: center;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .error-details {
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .error-status h2 {
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .error-path, .error-timestamp {
+            font-size: 0.9rem;
+            color: #888;
+            margin: 0.5rem 0;
+        }
+
+        .error-debug {
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .error-debug details {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+
+        .error-debug summary {
+            cursor: pointer;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .debug-content {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .stack-trace {
+            margin-top: 1rem;
+            background-color: #f1f1f1;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        .stack-trace pre {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+    </style>
+</body>
+</html> 

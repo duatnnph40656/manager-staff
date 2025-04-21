@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý bộ môn / chuyên ngành</title>
+    <!-- Context path for JavaScript -->
+    <meta name="ctx" th:content="@{/}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container-fluid {
+            padding: 20px;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 20px 0;
+            background-color: #212529;
+            color: white;
+            transition: all 0.3s;
+            width: 250px;
+        }
+        
+        .sidebar-header {
+            padding: 10px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-header img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .menu-items {
+            padding: 0;
+            list-style: none;
+        }
+        
+        .menu-items li {
+            margin-bottom: 5px;
+        }
+        
+        .menu-items a {
+            padding: 10px 20px;
+            color: #adb5bd;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .menu-items a:hover,
+        .menu-items a.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid #007bff;
+        }
+        
+        .menu-items i {
+            margin-right: 10px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            position: relative;
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .header {
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        /* Tables and Cards */
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .card {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img th:src="@{/images/logo.png}" alt="FPT Logo" class="logo w-100" 
+                     onerror="this.src='https://placehold.co/200x80?text=FPT'">
+            </div>
+            <ul class="menu-items">
+                <li>
+                    <a th:href="@{/staff/list}">
+                        <i class="bi bi-people-fill"></i> Quản lý nhân viên
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/department}">
+                        <i class="bi bi-building"></i> Quản lý bộ môn
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/facility}">
+                        <i class="bi bi-geo-alt-fill"></i> Quản lý cơ sở
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/major}">
+                        <i class="bi bi-book-fill"></i> Quản lý chuyên ngành
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Quản lý bộ môn / chuyên ngành</h1>
+            </div>
+
+            <!-- Staff Information Section -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0 d-flex align-items-center">
+                        <i class="bi bi-info-circle me-2"></i> Thông tin nhân viên
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Mã</label>
+                            <input type="text" class="form-control" th:value="${staff?.staffCode}" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Tên</label>
+                            <input type="text" class="form-control" th:value="${staff?.name}" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Email FPT</label>
+                            <input type="email" class="form-control" th:value="${staff?.accountFpt}" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Email FE</label>
+                            <input type="email" class="form-control" th:value="${staff?.accountFe}" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignments Section -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 d-flex align-items-center">
+                        <i class="bi bi-list-check me-2"></i> Danh sách bộ môn, chuyên ngành theo cơ sở
+                    </h5>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAssignmentModal">
+                        <i class="bi bi-plus-circle me-1"></i> Thêm bộ môn chuyên ngành
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Cơ sở</th>
+                                    <th>Bộ môn</th>
+                                    <th>Chuyên ngành</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:if="${assignments == null || assignments.isEmpty()}">
+                                    <td colspan="5" class="text-center">Nhân viên này không có bộ môn chức vụ</td>
+                                </tr>
+                                <tr th:each="assignment, stat : ${assignments}">
+                                    <td th:text="${stat.count}"></td>
+                                    <td th:text="${assignment?.majorFacility?.departmentFacility?.facility?.name}"></td>
+                                    <td th:text="${assignment?.majorFacility?.major?.name}"></td>
+                                    <td th:text="${assignment?.majorFacility?.departmentFacility?.department?.name}"></td>
+                                    <td>
+                                        <form th:action="@{/staff/remove-assignment}" method="post" style="display: inline;">
+                                            <input type="hidden" name="id" th:value="${assignment?.id}">
+                                            <input type="hidden" name="staffId" th:value="${staff?.id}">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa phân công này?')">
+                                                <i class="bi bi-trash"></i> Xóa
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-danger">*** Chú ý: Nhân viên chỉ có một bộ môn và một chuyên ngành trong một cơ sở ***</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Assignment Modal -->
+            <div class="modal fade" id="addAssignmentModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title">Thêm bộ môn chuyên ngành</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/staff/{staffId}/add-assignment(staffId=${staff?.id})}" method="post" class="add-major-form">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Cơ sở:</label>
+                                    <select class="form-select form-select-lg mb-3" name="facilityId" id="facilitySelect" required>
+                                        <option value="">Chọn cơ sở</option>
+                                        <option th:each="facility : ${facilities}" 
+                                                th:value="${facility?.id}" 
+                                                th:text="${facility?.name}"></option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Bộ môn:</label>
+                                    <select class="form-select form-select-lg mb-3" name="departmentId" id="departmentSelect" disabled required>
+                                        <option value="">Chọn bộ môn</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Chuyên ngành:</label>
+                                    <select class="form-select form-select-lg mb-3" name="majorId" id="majorSelect" disabled required>
+                                        <option value="">Chọn chuyên ngành</option>
+                                    </select>
+                                </div>
+                            
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                    <strong>Lưu ý:</strong> Mỗi nhân viên chỉ được phân công một bộ môn chuyên ngành trong một cơ sở.
+                                </div>
+                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        <i class="bi bi-x-circle me-1"></i> Hủy
+                                    </button>
+                                    <button type="submit" class="btn btn-primary" id="addButton" disabled>
+                                        <i class="bi bi-plus-circle me-1"></i> Thêm
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:inline="javascript">
+        const baseUrl = document.querySelector('meta[name="ctx"]').getAttribute('content');
+        const staffId = /*[[${staff?.id}]]*/ '';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const facilitySelect = document.getElementById('facilitySelect');
+            const departmentSelect = document.getElementById('departmentSelect');
+            const majorSelect = document.getElementById('majorSelect');
+            const addButton = document.getElementById('addButton');
+            
+            // Reset form when modal is closed
+            $('#addAssignmentModal').on('hidden.bs.modal', function () {
+                facilitySelect.value = '';
+                departmentSelect.value = '';
+                majorSelect.value = '';
+                departmentSelect.disabled = true;
+                majorSelect.disabled = true;
+                addButton.disabled = true;
+            });
+            
+            // Fetch existing assignments from the table when modal is shown
+            $('#addAssignmentModal').on('show.bs.modal', function () {
+                // Reset display state of all options before checking
+                const facilityOptions = facilitySelect.querySelectorAll('option');
+                facilityOptions.forEach(option => {
+                    option.style.display = ''; // Reset to visible
+                    // Also reset any text modifications if needed
+                    if (option.textContent.includes(' (Đã được phân công)')) {
+                        option.textContent = option.textContent.split(' (')[0];
+                    }
+                });
+                // Remove any existing alerts
+                const existingAlerts = document.querySelectorAll('#addAssignmentModal .alert-info, #addAssignmentModal .alert-warning');
+                existingAlerts.forEach(alert => alert.remove());
+                
+                // Extract assigned facilities from the table
+                const assignmentRows = document.querySelectorAll('table tbody tr');
+                let assignedFacilities = [];
+                let assignedFacilityNames = [];
+                assignmentRows.forEach(row => {
+                    const facilityCell = row.cells[1]; // Assuming facility name is in the second column
+                    if (facilityCell) {
+                        const facilityName = facilityCell.textContent.trim();
+                        assignedFacilityNames.push(facilityName);
+                        // Find the corresponding option in the select
+                        facilityOptions.forEach(option => {
+                            if (option.textContent.trim() === facilityName && option.value) {
+                                option.style.display = 'none'; // Hide the option completely
+                                console.log('Hiding facility:', option.textContent, 'ID:', option.value);
+                                assignedFacilities.push(option.textContent.trim());
+                            }
+                        });
+                    }
+                });
+                
+                console.log('Assigned facilities from table:', assignedFacilityNames);
+                
+                // Add alert if there are assigned facilities
+                if (assignedFacilities.length > 0) {
+                    console.log('Creating alert for assigned facilities:', assignedFacilities);
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-info alert-dismissible fade show mt-2';
+                    alertDiv.role = 'alert';
+                    alertDiv.innerHTML = `<strong>Thông báo:</strong> Nhân viên này đã được phân công tại: ${assignedFacilities.join(', ')}. Bạn chỉ có thể thêm phân công cho các cơ sở khác.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+                    const modalBody = document.querySelector('#addAssignmentModal .modal-body');
+                    if (modalBody) {
+                        console.log('Modal body found, inserting alert.');
+                        modalBody.insertBefore(alertDiv, modalBody.firstChild);
+                    } else {
+                        console.error('Modal body not found, cannot insert alert.');
+                    }
+                } else {
+                    console.log('No assigned facilities found for this staff.');
+                }
+            });
+            
+            // Handle facility selection
+            facilitySelect.addEventListener('change', function() {
+                const facilityId = this.value;
+                departmentSelect.disabled = true;
+                majorSelect.disabled = true;
+                addButton.disabled = true;
+                
+                if (facilityId) {
+                    // Clear previous options
+                    departmentSelect.innerHTML = '<option value="">Chọn bộ môn</option>';
+                    majorSelect.innerHTML = '<option value="">Chọn chuyên ngành</option>';
+                    
+                    // Fetch departments for selected facility
+                    fetch(`${baseUrl}api/departments/by-facility/${facilityId}`)
+                        .then(response => response.json())
+                        .then(departments => {
+                            departments.forEach(department => {
+                                const option = document.createElement('option');
+                                option.value = department.id;
+                                option.textContent = department.name;
+                                departmentSelect.appendChild(option);
+                            });
+                            departmentSelect.disabled = false;
+                        })
+                        .catch(error => console.error('Error fetching departments:', error));
+                }
+            });
+            
+            // Handle department selection
+            departmentSelect.addEventListener('change', function() {
+                const departmentId = this.value;
+                const facilityId = facilitySelect.value;
+                majorSelect.disabled = true;
+                addButton.disabled = true;
+                
+                if (departmentId && facilityId) {
+                    // Clear previous options
+                    majorSelect.innerHTML = '<option value="">Chọn chuyên ngành</option>';
+                    
+                    // Fetch majors for selected department and facility
+                    fetch(`${baseUrl}api/majors/by-department-facility?departmentId=${departmentId}&facilityId=${facilityId}`)
+                        .then(response => response.json())
+                        .then(majors => {
+                            majors.forEach(major => {
+                                const option = document.createElement('option');
+                                option.value = major.id;
+                                option.textContent = major.name;
+                                majorSelect.appendChild(option);
+                            });
+                            majorSelect.disabled = false;
+                        })
+                        .catch(error => console.error('Error fetching majors:', error));
+                }
+            });
+            
+            // Enable submit button when all selections are made
+            majorSelect.addEventListener('change', function() {
+                addButton.disabled = !this.value;
+            });
+        });
+    </script>
+</body>
+</html> 
